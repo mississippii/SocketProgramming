@@ -3,6 +3,7 @@ package Network;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
     private static final String host= "127.0.0.1";
@@ -12,20 +13,20 @@ public class Client {
         connect();
     }
     private static void connect() throws IOException {
-        try {
             Socket socket = new Socket(host, port);
             System.out.println("Client Connected");
-            ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
-            int i=0;
-            while(i<5) {
-                writer.writeObject("Hello Server I'm from client1");
-                i++;
-            }
-            System.out.println("Message transferred");
-        } catch (IOException e) {
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            System.out.printf("Client: ");
+            Scanner scanner = new Scanner(System.in);
+            String input =scanner.nextLine();
+            outputStream.writeObject(input);
+        try {
+            Object messege =  inputStream.readObject();
+            System.out.println("Server: " + messege);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
 
     }
 }
